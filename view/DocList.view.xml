@@ -1,0 +1,67 @@
+<mvc:View controllerName="view.DocList"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:control="control"
+	xmlns:h="http://www.w3.org/1999/xhtml">
+	<Page
+		id="page"
+		title="{i18n>HOME_TITLE}"
+		showNavButton="true"
+		navButtonPress="onPressBack"
+		showFooter="{device>/isNoPhone}" >
+		<headerContent>
+			<Button
+				visible="false"
+				icon="sap-icon://cart"
+				tooltip="{i18n>TO_CART_BUTTON_TOOLTIP}"
+				press="handleCartButtonPress">
+			</Button>
+		</headerContent>
+		<subHeader>
+			<Toolbar id="searchBar">
+				<SearchField
+					id="searchField"
+					showRefreshButton="{device>/isNoTouch}"
+					placeholder="{i18n>HOME_SEARCH_PLACEHOLDER}"
+					search="handleSearch"
+					tooltip="{i18n>HOME_SEARCH_TOOLTIP}"
+					width="100%">
+				</SearchField>
+			</Toolbar>
+		</subHeader>
+		<content>
+			<PullToRefresh
+				id="pullToRefresh"
+				visible="{device>/isTouch}" 
+				refresh="handleRefresh" />
+			<!-- Doc List -->
+			<List
+				id="docList"
+				mode="{device>/listMode}"
+				select="handleSubcategoryListSelect"
+				noDataText="{i18n>HOME_NO_DATA}"
+				items="{
+					path : '/data',
+					sorter : {
+						path : 'name',
+						descending : false
+					}
+				}">
+				<items>
+					<StandardListItem
+						title="{name}"
+						description="{uid}"
+						type="Active"
+						press="handleSubcategoryListItemPress"
+						>
+					</StandardListItem>
+				</items>
+			</List>
+		</content>
+		<footer>
+			<Toolbar>
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>

@@ -1,0 +1,93 @@
+<mvc:View controllerName="view.Subcategory"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:control="control"
+	xmlns:h="http://www.w3.org/1999/xhtml">
+	<Page
+		id="page"
+		title="{i18n>HOME_TITLE}"
+		showNavButton="true"
+		navButtonPress="onPressBack"
+		showFooter="{device>/isNoPhone}" >
+		<headerContent>
+			<Button
+				visible="false"
+				icon="sap-icon://cart"
+				tooltip="{i18n>TO_CART_BUTTON_TOOLTIP}"
+				press="handleCartButtonPress">
+			</Button>
+		</headerContent>
+		<subHeader>
+			<Toolbar id="searchBar">
+				<SearchField
+					id="searchField"
+					showRefreshButton="false"
+					placeholder="{i18n>HOME_SEARCH_PLACEHOLDER}"
+					search="handleSearch"
+					tooltip="{i18n>HOME_SEARCH_TOOLTIP}"
+					width="100%">
+				</SearchField>
+			</Toolbar>
+		</subHeader>
+		<footer>
+			<Toolbar>
+			</Toolbar>
+		</footer>
+		<content>
+			<!--<PullToRefresh
+				id="pullToRefresh"
+				visible="false" 
+				refresh="handleRefresh" />-->
+			<!-- This list shows the search results -->
+			<List
+				id="subcategoryList"
+				mode="{device>/listMode}"
+				select="handleSubcategoryListSelect"
+				noDataText="{i18n>CATEGORY_NO_DATA}"
+				items="{
+					path : '/data',
+					sorter : {
+						path : 'name',
+						descending : false
+					}
+				}">
+				<items>
+					<StandardListItem
+						title="{name}"
+						description="{id}"
+						type="Active"
+						press="handleSubcategoryListItemPress"
+						>
+					</StandardListItem>
+				</items>
+			</List>
+			<!-- This list shows the product categories 
+			<List
+				id="categoryList"
+				headerText="{i18n>HOME_CATEGORY_LIST_HEADER}"
+				mode="None"
+				items="{
+					path : 'docCat>/docCategories',
+					sorter : {
+						path : 'name',
+						descending: false
+					}
+				}">
+				<items>
+					<StandardListItem
+						title="{name}"
+						type="Active"
+						description="{id}"
+						press="handleCategoryListItemPress" >
+						<customData>
+							<core:CustomData
+								key="id"
+								value="{id}" />
+						</customData>
+					</StandardListItem>
+				</items>
+			</List>-->
+		</content>
+	</Page>
+</mvc:View>

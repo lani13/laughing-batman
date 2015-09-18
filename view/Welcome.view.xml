@@ -1,0 +1,30 @@
+<mvc:View
+	controllerName="view.Welcome"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc" >
+	<Page
+	id="welcomePage"
+	showHeader="true"
+	enableScrolling="false" >
+	<TileContainer
+	  id="container"
+	  tileDelete="handleTileDelete"
+	  tiles="{/TileCollection}">
+	  <StandardTile
+	    icon="sap-icon://{icon}"
+	    type="{type}"
+	    number="{number}"
+	    numberUnit="{numberUnit}"
+	    title="{title}"
+	    info="{info}"
+	    infoState="{infoState}" />
+	</TileContainer>
+	<footer visible="{device>/isNoTouch}">
+		<Toolbar>
+			<ToolbarSpacer/>
+				
+		</Toolbar>
+	</footer>
+	</Page>
+</mvc:View>
