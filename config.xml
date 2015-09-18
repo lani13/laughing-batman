@@ -1,5 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="ontc.docbrowser.app" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="ontc.docbrowser.app" 
+		version="0.0.1" 
+		xmlns="http://www.w3.org/ns/widgets" 
+		xmlns:cdv="http://cordova.apache.org/ns/1.0"
+		xmlns:gap="http://phonegap.com/ns/1.0"
+		xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Document Browser</name>
     <description>
         Mobile document browser
@@ -24,9 +29,9 @@
         <allow-intent href="itms-apps:*" />
     </platform>
 	
-	<plugin name="org.apache.cordova.file" version="1.3.1" />
-	<plugin name="org.apache.cordova.file-transfer" version="0.4.6" />
-	<plugin name="io.github.pwlin.cordova.plugins.fileopener2" version="1.0.11" />
+	<gap:plugin name="org.apache.cordova.file" version="1.3.1" />
+	<gap:plugin name="org.apache.cordova.file-transfer" version="0.4.6" />
+	<gap:plugin name="io.github.pwlin.cordova.plugins.fileopener2" version="1.0.11" />
 
 	<preference name="AndroidPersistentFileLocation" value="Compatibility" />
 		
