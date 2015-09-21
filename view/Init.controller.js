@@ -13,7 +13,7 @@ sap.ui.controller("view.Init", {
 	    var loginInput = this.getView().byId("loginInput");   
 	    var passInput = this.getView().byId("passInput"); 
 
-		if(loginInput.getValue()=='admin' && passInput.getValue()=='pleple13')
+		if(loginInput.getValue()=='admin' && passInput.getValue()=='abcd')
 				this._router.navTo("home", {}, !sap.ui.Device.system.phone);
 		else
 			sap.m.MessageToast.show("Błędne dane logowania");
