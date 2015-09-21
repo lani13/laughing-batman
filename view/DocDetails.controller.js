@@ -6,6 +6,12 @@ sap.ui.controller("view.DocDetails", {
 
 	doxUrl: 'http://acuarius.ontc.pl:3000/api/get?method=getWholeDox&uid=',
 
+	doxAttachmentsUrl: 'http://acuarius.ontc.pl:3000/api/get?method=documentAttachments?uid=',
+	
+	imageUrl: 'http://acuarius.ontc.pl:3000/BP008/ddd/thumbnails/',
+	
+	attachmentUrl: 'http://acuarius.ontc.pl:3000/BP008/ddd/attachments/',
+	
 	onInit : function () {
 		this._router = sap.ui.core.UIComponent.getRouterFor(this);
 		this._router.getRoute("documentDetails").attachPatternMatched(this._routePatternMatched, this);
@@ -20,174 +26,215 @@ sap.ui.controller("view.DocDetails", {
 
 	},
 
-
-	handleSearch : function (oEvent) {
-		//this._search();
-	},
-
-	handleRefresh : function (oEvent) {
-		/*var that = this;
-		util.Util.updateModel(this.getView());
-
-		
-		
-		sap.ui.getCore().getEventBus().subscribe("ninja.openui5.cart", "modelRefreshed",
-		    function(){
-		    	that.getView().byId("pullToRefresh").hide();
-		    	sap.m.MessageToast.show("Products refreshed");
-		    }
-		);*/
-	},
-
-	_search : function () {
-		var oView = this.getView();
-		var oProductList = oView.byId("productList");
-		var oCategoryList = oView.byId("categoryList");
-		var oSearchField = oView.byId("searchField");
-
-		// switch visibility of lists
-		var bShowSearch = oSearchField.getValue().length !== 0;
-		oProductList.toggleStyleClass("invisible", !bShowSearch);
-		oCategoryList.toggleStyleClass("invisible", bShowSearch);
-		
-		if (bShowSearch) {
-			this._changeNoDataTextToIndicateLoading(oProductList);
-		}
-
-		// filter product list
-		var oBinding = oProductList.getBinding("items");
-		if (oBinding) {
-			if (bShowSearch) {
-				var oFilter = new sap.ui.model.Filter("Name", sap.ui.model.FilterOperator.Contains, oSearchField.getValue());
-				oBinding.filter([oFilter]);
-			} else {
-				oBinding.filter([]);
-			}
-		}
-	},
-	
-	_changeNoDataTextToIndicateLoading: function (oList) {
-		var sOldNoDataText = oList.getNoDataText();
-		oList.setNoDataText("Loading...");
-		oList.attachEventOnce("updateFinished", function() {oList.setNoDataText(sOldNoDataText);});
-	},
-
-	handleSubcategoryListItemPress : function (oEvent) {
-		this._showDocument(oEvent);
-		
-		//var oBindContext = oEvent.getSource().getBindingContext();
-		//var oModel = oBindContext.getModel();
-		//var iCategoryIdx = util.Util.parseIndex(oBindContext.getPath());
-		//var sCategoryId = oModel.getData().subCat[iCategoryIdx].id;
-		//alert("Document id: "+sCategoryId);
-		//this._router.navTo("category", {id: sCategoryId});
-	},
-	
-	handleSubcategoryListSelect: function (oEvent) {
-		//var oItem = oEvent.getParameter("listItem");
-		this._showDocument(oEvent);
-
-		//var oBindContext = oItem.getBindingContext();
-		//var oModel = oBindContext.getModel();
-
-        //var iCategoryIdx = oBindContext.getPath().split('/').pop();
-		//var sCategoryId = oModel.getData().subCat[iCategoryIdx].id;
-		//alert("Document id: "+sCategoryId);
-		//this._router.navTo("category", {id: sCategoryId});
-	},
-	
-		
-	_showDocument: function (oEvent) {
-		var oBindContext;
-		if (sap.ui.Device.system.phone) {
-			oBindContext = oEvent.getSource().getBindingContext();
-		} else {
-			oBindContext = oEvent.getSource().getSelectedItem().getBindingContext();
-		}
-		var oModel = oBindContext.getModel();
-		
-		var iCategoryIdx = util.Util.parseIndex(oBindContext.getPath());
-		var sCategoryId = oModel.getData().subCat[iCategoryIdx].id;
-		//alert("Document id: "+sCategoryId);
-
-		//this._router.navTo("product", {id: sCategoryId, productId: sProductId}, !sap.ui.Device.system.phone);
-	},
-	
-	handleCartButtonPress :  function (oEvent) {
-		this._router.navTo("cart");
-	},
 	
 	onPressBack : function (oEvent) {
 		this.getOwnerComponent().myNavBack();
 	},
 
 	onDocPress: function(oEvent){
-		/*sap.m.MessageToast.show("Pdf ");
-	    if(sap.ui.Device.os.android)
-		window.open('http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/projekty.pdf', "_blank", "location=no");
-	    if(sap.ui.Device.os.ios)
-		window.open('http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/projekty.pdf', "_blank", "location=no");*/
-
-
-	    if(sap.ui.Device.system.desktop)
-	        window.open('http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/projekty.pdf');
-		else
-			this.downloadDoc();
+	    
+		//if(sap.ui.Device.system.desktop)
+	        //window.open(this.attachmentUrl+this.attachmentData[id].fileName);
 	},
 	
 	setModelDocument: function(idString){
 		
-    var oView = this.getView();
+	var oView = this.getView();
 	var oModel = new sap.ui.model.json.JSONModel();
 
-	var data = { "data": 
-     { 
-        "id": "dox1",
-       "name": "Dokument 1",
-	   "type": "",
-	   "imgs":[{"img":"http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/SearchSAPUI/jv.png"},{"img":"http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/SearchSAPUI/5q.png"},{"img":"http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/SearchSAPUI/zt.png"}]
-	 }};
-		
+	//var busyIndicator = this.getView().byId("busyIndicator");   
+	//busyIndicator.setVisible(true);
+
+	var oImageCarousel = this.getView().byId("docImages");	
+	var p = oImageCarousel.getPages();
+ 	
+	for(var i=0; i<p.length; i++){
+		p[i].destroy();
+	}
+	
+	var imgUrl = this.imageUrl;
+	var pressFunction = this.onDocPress;
+	
+	var doxAtchUrl = this.doxAttachmentsUrl;
+	var atchUrl = this.attachmentUrl;
+	var imgUrl = this.imageUrl;
+	var pressFunction = this.onDocPress;
+	var atch = [];
+	var data = {};
+	var dwnl = this.downloadDoc;
+
 	$.ajax({
 		url: this.doxUrl+idString,
 		dataType: 'json',
 		async: true
 		}).done(function(response){
-			//data = response;
-			data.data.id = idString;
-			data.data.name = response.DocName;
-			data.data.type = response.DoxName;
-			oModel.setData(data.data);
-			oView.setModel(oModel);
+			data.id = idString;
+			data.name = response.DocName;
+			data.type = response.DoxName;
+			oModel.setData(data);
+			oView.setModel(oModel,'attach');
+			
+			$.ajax({
+				url: doxAtchUrl+idString,
+				dataType: 'json',
+				async: true
+				}).done(function(response){
+					atch = response.data;
+
+					var modelData = [];
+					var oModel1 = oView.getModel('attach');
+					var oldData = oModel1.getData();
+
+					if(atch.length==0)
+						sap.m.MessageToast.show("Brak załączników"); 
+					else
+			 			 for(var i=0; i<atch.length; i++){
+						modelData.push(atch[i]);
+						var button = new sap.m.Button("button_"+i,{text:'Pobierz '+atch[i].name.split('-').pop(), type: 'Accept', press: function(oEvent){
+	    									
+	    												var id = oEvent.getSource().getId().split('_').pop();
+														var data = oView.getModel('attach').getData();
+														var docData = data.attachments[id];
+													
+	    												if(sap.ui.Device.system.desktop)
+	         											       window.open(atchUrl+docData.url.split('/').pop());	
+														else
+															 dwnl(atchUrl+docData.url.split('/').pop(),docData.name.split('-').pop(),docData.ext);
+
+													}			
+						});
+						var image = new sap.m.Image({src: imgUrl+atch[i].thumbnail.split('/').pop(), alt: 'brak obrazka'});
+      		    				image.addStyleClass("doc-image");
+ 				
+						var vLayout = new sap.ui.layout.VerticalLayout({width: '100%'});
+						vLayout.addContent(button);				
+						vLayout.addContent(image);
+						oImageCarousel.insertPage(vLayout, i);
+
+			 		 }
+			
+					oldData.attachments = modelData;
+					oModel1.setData(oldData);
+					oView.setModel(oModel1,"attach");
+		
+					//busyIndicator.setVisible(false);
+
+				}).fail(function() {
+					sap.m.MessageToast.show("Brak połączenia z serwerem");
+					//busyIndicator.setVisible(false);
+				});
+
+
+			
 		}).fail(function() {
 			sap.m.MessageToast.show("Brak połączenia z serwerem");
+			//busyIndicator.setVisible(false);
 		});
 
-		var oImageCarousel = this.getView().byId("docImages");	
-		oImageCarousel.removeAllPages();
 
-		for(var i=0; i< data.data.imgs.length; i++){
-		    var image = new sap.m.Image({src: data.data.imgs[i].img, alt: 'brak obrazka'});
-      		    image.addStyleClass("doc-image");
-		    oImageCarousel.insertPage(image, i);
-		}			
+	/*$.ajax({
+		url: this.doxAttachmentsUrl+idString,
+		dataType: 'json',
+		async: true
+		}).done(function(response){
+			atch = response.data;
+			
+			if(atch.length==0)
+				sap.m.MessageToast.show("Brak załączników"); 
+			else
+			  for(var i=0; i<atch.length; i++){
+				
+				var button = new sap.m.Button(atch[i].url.split('/').pop(),{text:'Pobierz '+atch[i].name.split('-').pop(), type: 'Accept', press: function(oEvent){
+	    									
+	    												var id = oEvent.getSource().getId();
+
+	    												if(sap.ui.Device.system.desktop)
+	         											       window.open(atchUrl+id);	
+														else
+															   dwnl(atchUrl+id);
+													}
+								});
+				var image = new sap.m.Image({src: imgUrl+atch[i].thumbnail.split('/').pop(), alt: 'brak obrazka'});
+      		    	image.addStyleClass("doc-image");
+ 				
+				var vLayout = new sap.ui.layout.VerticalLayout({width:'100%'});
+				vLayout.addContent(button);				
+				vLayout.addContent(image);
+				oImageCarousel.insertPage(vLayout, i);
+
+			  }
+
+			busyIndicator.setVisible(false);
+
+		}).fail(function() {
+			sap.m.MessageToast.show("Brak połączenia z serwerem");
+			busyIndicator.setVisible(false);
+		});*/
+
 		
 	},
 	
 	
-	downloadDoc: function(){
-		var uri = encodeURI("http://acuarius.ontc.pl:3000/ace/app/kasia.dymarek/projekty.pdf");
-		var openDoc = this.openDocument;
-
+	downloadDoc: function(fileUrl, filename, ext){
+		var uri = encodeURI(fileUrl);
+		//var openDoc = this.openDocument;
+		//var f = fileUrl.split('-');
+		//var filename = f[f.length-2]+f[f.length-1];
+		
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
              function onFileSystemSuccess(fileSystem) {
 				fileSystem.root.getDirectory("DocumentBrowser", {create: true}, 
 					function gotDirectory(dirEntry) {
 						var fileTransfer = new FileTransfer();
 
-						fileTransfer.download(uri, dirEntry.toURL() + "projekty.pdf",
+						fileTransfer.download(uri, dirEntry.toURL() + filename,
 								function(theFile) {
-									openDoc(dirEntry.toURL() + "projekty.pdf");
+									console.log("Filename: " + dirEntry.toURL() + filename);
+									
+									var path = dirEntry.toURL() + filename;
+									
+									//var ext = path.split('.').pop();
+									var mimeType = 'none';
+		
+		
+									if(ext == 'pdf')
+										mimeType = 'application/pdf';
+									else if(ext == 'doc' || ext == 'docx')
+										mimeType = 'application/msword';
+									else if(ext == 'ppt' || ext == 'pptx')
+										mimeType = 'application/vnd.ms-powerpoint';
+									else if(ext == 'xls' || ext == 'xlsx')
+										mimeType = 'application/vnd.ms-excel';
+									else if(ext == 'rtf')
+										mimeType = 'application/rtf';
+									else if(ext == 'txt')
+										mimeType = 'text/plain';
+									else if(ext == 'gif')
+										mimeType = 'image/gif';
+									else if(ext == 'jpg' || ext == 'jpeg')
+										mimeType = 'image/jpeg';
+									else if(ext == 'png')
+										mimeType = 'image/png';
+										
+										
+									if(mimeType=='none')
+										sap.m.MessageToast.show("Nieobsługiwany format pliku"); 
+									else
+										cordova.plugins.fileOpener2.open(
+											path, 
+											mimeType, 
+											{ 
+												error : function(e) { 
+													sap.m.MessageToast.show("Błąd otwierania pliku: " + e.message);
+												},
+												success : function() {
+													sap.m.MessageToast.show("Plik został zapisany");                
+												}
+											}
+										);
+									
+									//openDoc(dirEntry.toURL() + theFile.fullPath);
+
 								},
 								function(error) {
 									sap.m.MessageToast.show("Błąd pobierania pliku: "+ error.code);
@@ -196,23 +243,50 @@ sap.ui.controller("view.DocDetails", {
 					},function fail(error) { sap.m.MessageToast.show("Błąd pliku: "+ error.code); });
 			}, function fail(error) { sap.m.MessageToast.show("Błąd systemu plików: "+ error.code); });
 		
-	},
+	}/*,
 	
 	openDocument: function(path){
 		
-		cordova.plugins.fileOpener2.open(
-			path, 
-			'application/pdf', 
-			{ 
-				error : function(e) { 
-					sap.m.MessageToast.show("Błąd otwierania pliku: " + e.message);
-				},
-				success : function() {
-					//sap.m.MessageToast.show("Otwarto plik");                
+		var ext = path.split('.').pop();
+		var mimeType = 'none';
+		
+		
+		if(ext == 'pdf')
+			mimeType = 'application/pdf';
+		else if(ext == 'doc' || ext == 'docx')
+			mimeType = 'application/msword';
+		else if(ext == 'ppt' || ext == 'pptx')
+			mimeType = 'application/vnd.ms-powerpoint';
+		else if(ext == 'xls' || ext == 'xlsx')
+			mimeType = 'application/vnd.ms-excel';
+		else if(ext == 'rtf')
+			mimeType = 'application/rtf';
+		else if(ext == 'txt')
+			mimeType = 'text/plain';
+		else if(ext == 'gif')
+			mimeType = 'image/gif';
+		else if(ext == 'jpg' || ext == 'jpeg')
+			mimeType = 'image/jpeg';
+		else if(ext == 'png')
+			mimeType = 'image/png';
+			
+			
+		if(mimeType=='none')
+			sap.m.MessageToast.show("Nieobsługiwany format pliku"); 
+		else
+		    cordova.plugins.fileOpener2.open(
+				path, 
+				mimeType, 
+				{ 
+					error : function(e) { 
+						sap.m.MessageToast.show("Błąd otwierania pliku: " + e.message);
+					},
+					success : function() {
+						sap.m.MessageToast.show("Plik został zapisany");                
+					}
 				}
-			}
-		);
-	}
+			);
+	}*/
 	
 	
 });

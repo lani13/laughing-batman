@@ -27,6 +27,11 @@ sap.ui.define([
 				routes: [
 					{
 						pattern: "",
+						name: "init",
+						target: "initView"
+					},
+					{
+						pattern: "home",
 						name: "home",
 						target: "home"
 					},
@@ -67,6 +72,10 @@ sap.ui.define([
 					}
 				],
 				targets: {
+					initView: {
+						viewName: "Init",
+						controlAggregation: "masterPages"
+					},
 					productView: {
 						viewName: "Product",
 						controlAggregation: "detailPages"

@@ -24,7 +24,7 @@ sap.ui.controller("view.DocList", {
 		this.sCategoryId = oEvent.getParameter("arguments").catid;
 
 		var oModel = new sap.ui.model.json.JSONModel();
-		oModel.setData({});
+		oModel.setData({"data":[]});
 		this.getView().setModel(oModel);
 
 		this.setModelDocuments(this.sCategoryId, this.sSubcategoryId);
@@ -160,13 +160,13 @@ sap.ui.controller("view.DocList", {
       						oView.setModel(oModel);
 					}).fail(function() {
 						sap.m.MessageToast.show("Brak połączenia z serwerem");
-						oDocList.setNoDataText("Brak wyników wyszukiwania");
+						oDocList.setNoDataText("Brak danych");
  					});
 
 				}
 			}).fail(function() {
 				sap.m.MessageToast.show("Brak połączenia z serwerem");
-				oDocList.setNoDataText("Brak wyników wyszukiwania");
+				oDocList.setNoDataText("Brak danych");
  			});
       				
 	},

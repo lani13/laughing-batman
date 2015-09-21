@@ -7,21 +7,22 @@
 	xmlns:h="http://www.w3.org/1999/xhtml">
 	<Page
 		id="documentDetails"
-		title="{/name}"
+		title="{attach>/name}"
 		enableScrolling="false" 
-	        showHeader="true"
+	    showHeader="true"
 		showNavButton="{device>/isPhone}"
 		navButtonPress="onPressBack"
-		showFooter="{device>/isNoPhone}" >
+		showFooter="true" >
 		<headerContent>
 		</headerContent>
 		<content>
 		<Bar>
 			<contentMiddle>
-			  <Label text="{/type}" class="sapUiSmallMarginBottom" />
+			  <Label text="{attach>/type}" class="sapUiSmallMarginBottom" />
 			</contentMiddle>
 			<contentRight>
-			  <Button id="showDocButton" type="Accept" text="Wyświetl" press="onDocPress" />
+			  <!--<BusyIndicator id="busyIndicator" size="2em"/>
+			  <Button id="showDocButton" type="Accept" text="Pobierz" press="onDocPress" />-->
 			</contentRight>
 		</Bar>
 		<Carousel id="docImages"

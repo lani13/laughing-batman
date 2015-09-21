@@ -17,6 +17,10 @@ sap.ui.controller("view.Subcategory", {
 	},
 
         _routePatternMatched: function(oEvent) {
+			
+		var oModel = new sap.ui.model.json.JSONModel();			
+		oModel.setData({"data":[]});
+		this.getView().setModel(oModel);
 		this.sCategoryId = oEvent.getParameter("arguments").id;
 		this.setModelSubCategories(this.sCategoryId);
 
@@ -63,7 +67,7 @@ sap.ui.controller("view.Subcategory", {
 	_changeNoDataTextToIndicateLoading: function (oList) {
 		//var sOldNoDataText = oList.getNoDataText();
 		oList.setNoDataText("Szukam...");
-		oList.attachEventOnce("updateFinished", function() {oList.setNoDataText("Brak danych");});
+		oList.attachEventOnce("updateFinished", function() {oList.setNoDataText("Brak wyników wyszukiwania");});
 	},
 
 	handleSubcategoryListItemPress : function (oEvent) {
@@ -125,7 +129,7 @@ sap.ui.controller("view.Subcategory", {
       				oView.setModel(oModel);
 			}).fail(function() {
 				sap.m.MessageToast.show("Brak połączenia z serwerem");
-				oDocList.setNoDataText("Brak wyników wyszukiwania");
+				oDocList.setNoDataText("Brak danych");
  			});
 	
 	}
