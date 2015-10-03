@@ -104,7 +104,7 @@ sap.ui.controller("view.DocDetails", {
 													}			
 						});
 						var image = new sap.m.Image({src: imgUrl+atch[i].thumbnail.split('/').pop(), alt: 'brak obrazka'});
-      		    				image.addStyleClass("doc-image");
+      		    		image.addStyleClass("doc-image");
  				
 						var vLayout = new sap.ui.layout.VerticalLayout({width: '100%'});
 						vLayout.addContent(button);				
@@ -178,8 +178,6 @@ sap.ui.controller("view.DocDetails", {
 	downloadDoc: function(fileUrl, filename, ext){
 		var uri = encodeURI(fileUrl);
 		//var openDoc = this.openDocument;
-		//var f = fileUrl.split('-');
-		//var filename = f[f.length-2]+f[f.length-1];
 		
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
              function onFileSystemSuccess(fileSystem) {
@@ -225,7 +223,7 @@ sap.ui.controller("view.DocDetails", {
 											mimeType, 
 											{ 
 												error : function(e) { 
-													sap.m.MessageToast.show("Błąd otwierania pliku: " + e.message);
+													sap.m.MessageToast.show("Błąd otwierania pliku");
 												},
 												success : function() {
 													sap.m.MessageToast.show("Plik został zapisany");                
@@ -237,11 +235,11 @@ sap.ui.controller("view.DocDetails", {
 
 								},
 								function(error) {
-									sap.m.MessageToast.show("Błąd pobierania pliku: "+ error.code);
+									sap.m.MessageToast.show("Błąd pobierania pliku");
 								}
 						);
-					},function fail(error) { sap.m.MessageToast.show("Błąd pliku: "+ error.code); });
-			}, function fail(error) { sap.m.MessageToast.show("Błąd systemu plików: "+ error.code); });
+					},function fail(error) { sap.m.MessageToast.show("Błąd pliku"); });
+			}, function fail(error) { sap.m.MessageToast.show("Błąd systemu plików"); });
 		
 	}/*,
 	
