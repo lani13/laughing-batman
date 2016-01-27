@@ -6,10 +6,22 @@ sap.ui.controller("view.Home", {
 
 	onInit : function () {
 		this._router = sap.ui.core.UIComponent.getRouterFor(this);
-		// trigger first search to set visibilities right
-		//this._search();
 		
-		this.setModelCategories();
+        var that = this;
+        //util.Util.checkLogin();
+                  
+        sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "loggedChecked",
+                                                           function(){
+                                                           that.setModelCategories();
+                                                           }
+                                                           );   
+                  
+        sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "notloggedChecked",
+                                                           function(){
+                                                           that._router.navTo("init", {}, !sap.ui.Device.system.phone);
+                                                           
+                                                           }
+                                                           );
 		
 	},
 
@@ -18,20 +30,8 @@ sap.ui.controller("view.Home", {
 	},
 
 	handleRefresh : function (oEvent) {
-		/*var that = this;
-		util.Util.updateModel(this.getView());
-                 
-		
-		
-		sap.ui.getCore().getEventBus().subscribe("ninja.openui5.cart", "modelRefreshed",
-		    function(){
-		    	that.getView().byId("pullToRefresh").hide();
-		    	sap.m.MessageToast.show("Products refreshed");
-		    }
-		);*/
-
 			
-	sap.m.MessageToast.show("Products refreshed");
+        sap.m.MessageToast.show("Products refreshed");
         this.getView().byId("pullToRefresh").hide();
 
 
@@ -39,21 +39,17 @@ sap.ui.controller("view.Home", {
 
 	_search : function () {
 		var oView = this.getView();
-		//var oProductList = oView.byId("productList");
+
 		var oCategoryList = oView.byId("categoryList");
 		var oSearchField = oView.byId("searchField");
 
-		// switch visibility of lists
 		var bShowSearch = oSearchField.getValue().length !== 0;
-		//oProductList.toggleStyleClass("invisible", !bShowSearch);
-		//oCategoryList.toggleStyleClass("invisible", bShowSearch);
 		
 		if (bShowSearch) {
 			this._changeNoDataTextToIndicateLoading(oCategoryList);
 		}
 
-		// filter product list
-		var oBinding = oCategoryList.getBinding("items");
+        var oBinding = oCategoryList.getBinding("items");
 		if (oBinding) {
 			if (bShowSearch) {
 				var oFilter = new sap.ui.model.Filter("name", sap.ui.model.FilterOperator.Contains, oSearchField.getValue());
@@ -72,7 +68,7 @@ sap.ui.controller("view.Home", {
 
 	handleCategoryListItemPress : function (oEvent) {
 		    	//sap.m.MessageToast.show("ItemPress");
-		//this._showSubCategories(oEvent);
+
 
 		var oBindContext = oEvent.getSource().getBindingContext();
 		var oModel = oBindContext.getModel();
@@ -82,9 +78,8 @@ sap.ui.controller("view.Home", {
 	},
 
 	handleCategoryListSelect: function (oEvent) {
-		    	sap.m.MessageToast.show("Select");
-                //this._showSubCategories(oEvent);
-		var oItem = oEvent.getParameter("listItem");
+        sap.m.MessageToast.show("Select");
+        var oItem = oEvent.getParameter("listItem");
 		oBindContext = oItem.getBindingContext();
 		
 		var oModel = oBindContext.getModel();
@@ -140,7 +135,22 @@ sap.ui.controller("view.Home", {
       		oModel.setData(data);
       		this.getView().setModel(oModel);
       				
-	}
+    },
+                  
+    logoutButtonPress: function(event){
+                  
+        var that = this;
+        util.Util.logout();
+                  
+        sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "loggedoutChecked",
+                                    function(){
+                                            that._router.navTo("init", {}, !sap.ui.Device.system.phone);
+                                                           
+                                    }
+        );
+                  
+                  
+    }
 	
 	
 });

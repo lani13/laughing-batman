@@ -190,6 +190,11 @@ sap.ui.define([
 			oDeviceModel.setDefaultBindingMode("OneWay");
 			oView.setModel(oDeviceModel, "device");
 
+            var userModel = new JSONModel({
+                                logged: "no",
+                                userData: {}
+                                });
+            sap.ui.getCore().setModel(userModel, "user");
 
 			// done
 			return oView;

@@ -10,10 +10,10 @@
 		showFooter="{device>/isNoPhone}" >
 		<headerContent>
 			<Button
-				visible="false"
-				icon="sap-icon://cart"
-				tooltip="{i18n>TO_CART_BUTTON_TOOLTIP}"
-				press="handleCartButtonPress">
+				visible="true"
+				icon="sap-icon://log"
+				tooltip="Wyloguj"
+				press="logoutButtonPress">
 			</Button>
 		</headerContent>
 		<subHeader>

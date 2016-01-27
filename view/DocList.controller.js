@@ -5,9 +5,9 @@ jQuery.sap.require("util.Util");
 sap.ui.controller("view.DocList", {
 
 
-	postUrl: 'http://acuarius.ontc.pl:3000/api/post?method=select_report_l&filter_set=BP008/ddd/sss/DoxSets/byDoxType/doxtype_DOCUMENT&filter_object=DOCUMENT',
+	postUrl: 'http://ac001.nachmurze.pl/api/post?method=select_report_l&filter_set=BP008/ddd/sss/DoxSets/byDoxType/doxtype_DOCUMENT&filter_object=DOCUMENT',
 
-	setUrl: 'http://acuarius.ontc.pl:3000/api/get?method=get_document_list&setname=BP008/ddd/sss/',
+	setUrl: 'http://ac001.nachmurze.pl/api/get?method=get_document_list&setname=BP008/ddd/sss/',
 
 	sSubcategoryId: "",
 
@@ -16,7 +16,13 @@ sap.ui.controller("view.DocList", {
 	onInit : function () {
 		this._router = sap.ui.core.UIComponent.getRouterFor(this);
 		this._router.getRoute("documentList").attachPatternMatched(this._routePatternMatched, this);
-	
+                  
+        sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "notloggedChecked",
+                                                    function(){
+                                                           router.navTo("init", {}, !sap.ui.Device.system.phone);
+                                                           
+                                                    }
+        );
 	},
 
         _routePatternMatched: function(oEvent) {
@@ -195,7 +201,23 @@ sap.ui.controller("view.DocList", {
 			obj["data[DocState]"]=idString;
 
 		return obj;
-	}
+    
+    },
+                  
+    logoutButtonPress: function(event){
+                  
+            var that = this;
+            util.Util.logout();
+                  
+            sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "loggedoutChecked",
+                                                function(){
+                                                           that._router.navTo("init", {}, !sap.ui.Device.system.phone);
+                                                           
+                                                }
+            );
+                  
+                  
+    }
 	
 	
 });

@@ -12,10 +12,10 @@
 		showFooter="{device>/isNoPhone}" >
 		<headerContent>
 			<Button
-				visible="false"
-				icon="sap-icon://cart"
-				tooltip="{i18n>TO_CART_BUTTON_TOOLTIP}"
-				press="handleCartButtonPress">
+				visible="true"
+				icon="sap-icon://log"
+				tooltip="Wyloguj"
+				press="logoutButtonPress">
 			</Button>
 		</headerContent>
 		<subHeader>
@@ -62,32 +62,6 @@
 					</StandardListItem>
 				</items>
 			</List>
-			<!-- This list shows the product categories 
-			<List
-				id="categoryList"
-				headerText="{i18n>HOME_CATEGORY_LIST_HEADER}"
-				mode="None"
-				items="{
-					path : 'docCat>/docCategories',
-					sorter : {
-						path : 'name',
-						descending: false
-					}
-				}">
-				<items>
-					<StandardListItem
-						title="{name}"
-						type="Active"
-						description="{id}"
-						press="handleCategoryListItemPress" >
-						<customData>
-							<core:CustomData
-								key="id"
-								value="{id}" />
-						</customData>
-					</StandardListItem>
-				</items>
-			</List>-->
 		</content>
 	</Page>
 </mvc:View>

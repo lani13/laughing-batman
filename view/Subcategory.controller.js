@@ -4,7 +4,7 @@ jQuery.sap.require("util.Util");
 
 sap.ui.controller("view.Subcategory", {
 
-	subcategoryUrl: 'http://acuarius.ontc.pl:3000/api/get?method=get_dictionary&dict_name=',
+	subcategoryUrl: 'http://ac001.nachmurze.pl/api/get?method=get_dictionary&dict_name=',
 
 	sCategoryId: "",
 
@@ -12,7 +12,12 @@ sap.ui.controller("view.Subcategory", {
 		this._router = sap.ui.core.UIComponent.getRouterFor(this);
 		this._router.getRoute("subcategory").attachPatternMatched(this._routePatternMatched, this);;
 		
-		
+        sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "notloggedChecked",
+                                                    function(){
+                                                           router.navTo("init", {}, !sap.ui.Device.system.phone);
+                                                           
+                                                    }
+        );
 		
 	},
 
@@ -132,6 +137,22 @@ sap.ui.controller("view.Subcategory", {
 				oDocList.setNoDataText("Brak danych");
  			});
 	
-	}
+    },
+                  
+    logoutButtonPress: function(event){
+                  
+            var that = this;
+            util.Util.logout();
+                  
+            sap.ui.getCore().getEventBus().subscribe("ontc.DocBrowser", "loggedoutChecked",
+                                                    function(){
+                                                           that._router.navTo("init", {}, !sap.ui.Device.system.phone);
+                                                           
+                                                    }
+            );
+                  
+                  
+    }
+
 
 });
